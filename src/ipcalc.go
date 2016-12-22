@@ -13,7 +13,6 @@ var err error
 var ipInterval string // IP地址段输入
 var ip string         // IP地址
 var mask int          // 掩码位
-var parts []string    // IP各段的值
 
 /*
    常量
@@ -29,32 +28,38 @@ const (
 )
 
 func main() {
+START:
+	fmt.Print("请输入掩码位(0~32)：")
 	inputReader = bufio.NewReader(os.Stdin)        // 初始化读入流
 	ipInterval, err = inputReader.ReadString('\n') // 以换行符为结束标识
 	if err != nil {
 		fmt.Print(err)
 	}
-	IPMaskSplit() // IP与掩码分割
-	calcMaskIP()  // 计算掩码IP
+	if flag, _ := IPMaskBitCheck(); flag {
+		calcMaskIP() // 计算掩码IP
+	} else {
+
+		goto START
+	}
+
 }
 
 /*
-IPMaskSplit IP与掩码分割
+IPMaskBitCheck IP与掩码分割
 */
-func IPMaskSplit() {
+func IPMaskBitCheck() (bool, error) {
 	ipInterval = strings.Trim(ipInterval, "\r\n") // 去除空格与换行符
-	parts = strings.Split(ipInterval, "/")        // 分割
-	for index, part := range parts {
-		switch index {
-		case 0:
-			ip = part
-		case 1:
-			mask, err = strconv.Atoi(part)
-			if err != nil {
-				fmt.Println(err)
-			}
-		}
+	mask, err = strconv.Atoi(ipInterval)
+	if mask < 0 || mask > 32 {
+		fmt.Println("掩码位范围错误(0~32)")
+		return false, err
 	}
+	if err != nil {
+		fmt.Println("请输入整数数字！")
+		fmt.Println()
+		return false, err
+	}
+	return true, nil
 }
 
 /*
@@ -92,5 +97,5 @@ func calcMaskIP() {
 			finalMaskIP += IPSep
 		}
 	}
-	fmt.Printf("掩码地址为：%s\n", finalMaskIP)
+	fmt.Printf("\n掩码地址为：%s\n", finalMaskIP)
 }
