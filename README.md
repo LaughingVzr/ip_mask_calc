@@ -1,9 +1,5 @@
 # IP Mask Calculator
-
 ### Author:Lauhing_Vzr
-
----
-
 ## 使用方法
 
 ---
