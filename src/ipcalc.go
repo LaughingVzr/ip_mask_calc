@@ -69,14 +69,9 @@ func calcMaskIP() {
 	var finalMaskIP string              // 掩码IP
 	var bitpat = 0xff00                 // 掩码位运算初始值
 	var maskVal = 0                     // 掩码值
-	var index = mask / IPPartBinLen     // 掩码值所在IP段索引
+	var index = mask/IPPartBinLen + 1   // 掩码值所在IP段索引
 	var changeBit = mask % IPPartBinLen // 掩码二进制所需要修改的位数
-	/*
-	 * 计算掩码变更位所在的IP区
-	 */
-	if changeBit != 0 {
-		index++
-	}
+
 	/*
 	 * 计算填充位的掩码值
 	 */
